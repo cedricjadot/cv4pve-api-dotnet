@@ -192,7 +192,11 @@ namespace Corsinvest.ProxmoxVE.Api
             var uriString = GetApiUrl() + resource;
             if (httpMethod == HttpMethod.Get && @params.Count > 0)
             {
+#if NET461
+                uriString += "?" + string.Join("&", @params.Select(a => $"{a.Key}={WebUtility.UrlEncode(a.Value)}"));
+#elif NETSTANDARD
                 uriString += "?" + string.Join("&", @params.Select(a => $"{a.Key}={HttpUtility.UrlEncode(a.Value)}"));
+#endif
             }
 
             if (DebugLevel >= 1)
